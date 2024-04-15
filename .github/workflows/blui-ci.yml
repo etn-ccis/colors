@@ -64,28 +64,28 @@ jobs:
         if-no-files-found: error
         path: branding
 
-  # verify_artifacts:
-  #   runs-on: ubuntu-latest
-  #   needs: build_packages
+  verify_artifacts:
+    runs-on: ubuntu-latest
+    needs: build_packages
 
-  #   strategy:
-  #     matrix:
-  #       node-version: [18.x]
+    strategy:
+      matrix:
+        node-version: [18.x]
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Download the dist folder
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: dist
-  #         path: dist
-  #     - name: Download the branding folder
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: branding
-  #         path: branding
-  #     - run: yarn test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download the dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+      - name: Download the branding folder
+        uses: actions/download-artifact@v3
+        with:
+          name: branding
+          path: branding
+      - run: yarn test
 
   # publish:
   #   runs-on: ubuntu-latest
