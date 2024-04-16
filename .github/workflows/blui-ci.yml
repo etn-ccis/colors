@@ -90,7 +90,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev') }}
-    needs: build_packages
+    needs: [build_packages, verify_artifacts]
     strategy:
       matrix:
         node-version: [18.x]
