@@ -1,3 +1,5 @@
+[![Build](https://github.com/etn-ccis/blui-colors/actions/workflows/blui-ci.yml/badge.svg?branch=master)](https://github.com/etn-ccis/blui-colors/actions/workflows/blui-ci.yml)
+
 # Brightlayer UI Colors
 
 This repository contains definitions for various colors used throughout Brightlayer UI applications.
