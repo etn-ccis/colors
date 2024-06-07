@@ -101,4 +101,4 @@ The branding colors palette and individual branding colors now can be imported f
 import BrandingColors, {lightGray} from '@brightlayer-ui/colors/branding';
 ```
 
-We recommend using @brightlayer-ui/colors version v4 with React Native projects and Material Design v3. For React Native projects with Material Design v2, please use @brightlayer-ui/colors version v3.
+You should include @brightlayer-ui/colors version v4 for React Native projects with Material Design v3. For React Native projects with Material Design v2, include @brightlayer-ui/colors version v3.
