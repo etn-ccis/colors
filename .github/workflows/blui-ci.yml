@@ -76,12 +76,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download the dist folder
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dist
           path: dist
       - name: Download the branding folder
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: branding
           path: branding
@@ -100,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download dist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dist
           path: dist
