@@ -52,13 +52,13 @@ jobs:
     - run: yarn
     - run: yarn build
     - name: Save dist
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dist
         if-no-files-found: error
         path: dist
     - name: Save branding
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: branding
         if-no-files-found: error
@@ -76,12 +76,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download the dist folder
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
       - name: Download the branding folder
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: branding
           path: branding
@@ -100,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download dist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
