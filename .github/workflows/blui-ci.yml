@@ -1,112 +1,112 @@
 name: Build
 
 on:
-  push:
-    branches: [ "dev", "master" ]
-  pull_request:
-    branches: [ "dev", "master" ]
-  pull_request_target:
-    types:
-      - opened
-    branches:
-      - '*/*'
+    push:
+        branches: ['dev', 'master']
+    pull_request:
+        branches: ['dev', 'master']
+    pull_request_target:
+        types:
+            - opened
+        branches:
+            - '*/*'
 
 permissions:
-  pull-requests: write
-  contents: read
+    pull-requests: write
+    contents: read
 
 jobs:
-  prettier:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [18.x]
-        
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-            node-version: ${{ matrix.node-version }}
-            cache: 'yarn'
-      - run: yarn
-      - run: yarn prettier
+    prettier:
+        runs-on: ubuntu-latest
 
-  build_packages:
-    runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x]
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'yarn'
+            - run: yarn
+            - run: yarn prettier
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - run: yarn
-    - run: yarn build
-    - name: Save dist
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        if-no-files-found: error
-        path: dist
-    - name: Save branding
-      uses: actions/upload-artifact@v4
-      with:
-        name: branding
-        if-no-files-found: error
-        path: branding
+    build_packages:
+        runs-on: ubuntu-latest
 
-  verify_artifacts:
-    runs-on: ubuntu-latest
-    needs: build_packages
+        strategy:
+            matrix:
+                node-version: [18.x]
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'yarn'
+            - run: yarn
+            - run: yarn build
+            - name: Save dist
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist
+                  if-no-files-found: error
+                  path: dist
+            - name: Save branding
+              uses: actions/upload-artifact@v4
+              with:
+                  name: branding
+                  if-no-files-found: error
+                  path: branding
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download the dist folder
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-      - name: Download the branding folder
-        uses: actions/download-artifact@v4
-        with:
-          name: branding
-          path: branding
-      - run: yarn test
+    verify_artifacts:
+        runs-on: ubuntu-latest
+        needs: build_packages
 
-  publish:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev') }}
-    needs: [build_packages, verify_artifacts]
-    strategy:
-      matrix:
-        node-version: [18.x]
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      BRANCH: ${{ github.ref == 'refs/heads/master' && 'master' || 'dev' }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download dist
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: 'https://registry.npmjs.org'
-      - run: yarn --immutable
-      - run: npm run publish:package -- -b ${{env.BRANCH}}
+        strategy:
+            matrix:
+                node-version: [18.x]
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Download the dist folder
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist
+                  path: dist
+            - name: Download the branding folder
+              uses: actions/download-artifact@v4
+              with:
+                  name: branding
+                  path: branding
+            - run: yarn test
+
+    publish:
+        runs-on: ubuntu-latest
+        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev') }}
+        needs: [build_packages, verify_artifacts]
+        strategy:
+            matrix:
+                node-version: [18.x]
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            BRANCH: ${{ github.ref == 'refs/heads/master' && 'master' || 'dev' }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Download dist
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist
+                  path: dist
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  registry-url: 'https://registry.npmjs.org'
+            - run: yarn --immutable
+            - run: npm run publish:package -- -b ${{env.BRANCH}}
